@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+@import 'highlight.js/styles/github.css' layer(base);
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-sidebar: #f9f9f9;
+  --bg-input: #ffffff;
+  --bg-message-user: #2563eb;
+  --bg-message-ai: #f4f4f5;
+  --bg-hover: #f0f0f0;
+  --bg-code: #f4f4f5;
+  --text-primary: #0a0a0a;
+  --text-secondary: #737373;
+  --text-message-user: #ffffff;
+  --text-message-ai: #0a0a0a;
+  --border-color: #e5e5e5;
+  --border-input: #d4d4d8;
+}
+
+.dark {
+  --bg-primary: #212121;
+  --bg-secondary: #171717;
+  --bg-sidebar: #171717;
+  --bg-input: #2f2f2f;
+  --bg-message-user: #7c3aed;
+  --bg-message-ai: #2f2f2f;
+  --bg-hover: #2f2f2f;
+  --bg-code: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-message-user: #ffffff;
+  --text-message-ai: #ffffff;
+  --border-color: #2f2f2f;
+  --border-input: #404040;
+}
+
+/* Dark mode code highlight overrides */
+.dark .hljs {
+  background: var(--bg-code) !important;
+  color: #d4d4d8 !important;
+}
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-literal { color: #c678dd !important; }
+.dark .hljs-string,
+.dark .hljs-doctag { color: #98c379 !important; }
+.dark .hljs-number,
+.dark .hljs-built_in { color: #d19a66 !important; }
+.dark .hljs-comment,
+.dark .hljs-quote { color: #5c6370 !important; }
+.dark .hljs-function .hljs-title { color: #61afef !important; }
+.dark .hljs-type,
+.dark .hljs-class .hljs-title { color: #e5c07b !important; }
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+}
