@@ -16,3 +16,10 @@ export interface ModelOption {
   provider: string
   enabled: boolean
 }
+
+export interface Knowledge {
+  id: string
+  name: string
+  docCount: number
+  createdAt: string
+}

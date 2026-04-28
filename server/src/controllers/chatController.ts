@@ -6,15 +6,36 @@ import {
 } from "../services/conversationService";
 import { getLLMService } from "../services/llmService";
 import { generateTitle } from "../services/titleService";
-import { ChatRequest } from "../types/chat";
+import { searchRelevant } from "../services/knowledgeService";
+import { ChatRequest, ChatMessage } from "../types/chat";
 
 export async function chat(req: Request, res: Response) {
-  const { prompt, sessionId, model } = req.body as ChatRequest;
+  const { prompt, sessionId, model, knowledgeId } = req.body as ChatRequest;
 
   const messages = await getMessages(sessionId);
   const isFirstMessage = messages.length === 0;
 
   messages.push({ role: "user", content: prompt });
+
+  // RAG: Inject relevant context if knowledgeId is provided
+  if (knowledgeId) {
+    try {
+      const relevantDocs = await searchRelevant(knowledgeId, prompt, 5);
+      if (relevantDocs.length > 0) {
+        const contexts = relevantDocs
+          .map((doc, i) => `[${i + 1}] (来源: ${doc.source})\n${doc.content}`)
+          .join("\n\n");
+        const systemMessage: ChatMessage = {
+          role: "system",
+          content: `基于以下参考资料回答用户的问题。如果参考资料中没有相关信息，请根据你的知识回答，并说明参考信息不足。\n\n参考资料:\n${contexts}`,
+        };
+        messages.unshift(systemMessage);
+      }
+    } catch (err) {
+      console.error("RAG search failed:", err);
+      // Continue without RAG context
+    }
+  }
 
   res.setHeader("Content-Type", "text/plain");
   res.setHeader("Transfer-Encoding", "chunked");

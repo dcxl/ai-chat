@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatInput from "@/features/chat/components/ChatInput";
 import ChatList from "@/features/chat/components/ChatList";
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
 import { useThemeStore } from "@/store/themeStore";
+import { useChatStore } from "@/features/chat/store/chatStore";
+import { useKnowledgeStore } from "@/features/chat/store/knowledgeStore";
 
 const ChatPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { theme, toggle } = useThemeStore();
+  const fetchModels = useChatStore((s) => s.fetchModels);
+  const fetchSessions = useChatStore((s) => s.fetchSessions);
+  const fetchKnowledges = useKnowledgeStore((s) => s.fetchKnowledges);
+
+  useEffect(() => {
+    fetchModels();
+    fetchSessions();
+    fetchKnowledges();
+  }, [fetchModels, fetchSessions, fetchKnowledges]);
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>

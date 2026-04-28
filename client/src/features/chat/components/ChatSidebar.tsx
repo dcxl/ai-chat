@@ -1,5 +1,9 @@
 import { useChatStore } from "../store/chatStore";
+import { useKnowledgeStore } from "../store/knowledgeStore";
 import ModelSelector from "./ModelSelector";
+import KnowledgeSelector from "./KnowledgeSelector";
+import KnowledgePanel from "./KnowledgePanel";
+import { useState } from "react";
 
 interface Props {
   onClose: () => void;
@@ -7,6 +11,18 @@ interface Props {
 
 const ChatSidebar = ({ onClose }: Props) => {
   const { sessions, createSession, setCurrentSessionId, currentSessionId, deleteSession } = useChatStore();
+  const { fetchKnowledges } = useKnowledgeStore();
+  const [showKnowledge, setShowKnowledge] = useState(false);
+
+  const handleOpenKnowledge = () => {
+    fetchKnowledges();
+    setShowKnowledge(true);
+  };
+
+  // Knowledge management panel view
+  if (showKnowledge) {
+    return <KnowledgePanel onClose={() => setShowKnowledge(false)} />;
+  }
 
   return (
     <div className="flex flex-col h-full p-3">
@@ -30,8 +46,13 @@ const ChatSidebar = ({ onClose }: Props) => {
       </button>
 
       {/* Model selector */}
-      <div className="mb-3">
+      <div className="mb-2">
         <ModelSelector />
+      </div>
+
+      {/* Knowledge selector */}
+      <div className="mb-3">
+        <KnowledgeSelector />
       </div>
 
       {/* Session list */}
@@ -70,19 +91,37 @@ const ChatSidebar = ({ onClose }: Props) => {
         ))}
       </div>
 
-      {/* Close sidebar */}
-      <button
-        onClick={onClose}
-        className="mt-2 flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
-        style={{ color: "var(--text-secondary)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7" />
-        </svg>
-        收起侧边栏
-      </button>
+      {/* Bottom actions */}
+      <div className="mt-2 space-y-1">
+        {/* Knowledge management */}
+        <button
+          onClick={handleOpenKnowledge}
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors"
+          style={{ color: "var(--text-secondary)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-hover)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+          </svg>
+          知识库管理
+        </button>
+
+        {/* Close sidebar */}
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors"
+          style={{ color: "var(--text-secondary)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg-hover)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7" />
+          </svg>
+          收起侧边栏
+        </button>
+      </div>
     </div>
   );
 };

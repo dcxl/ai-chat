@@ -2,12 +2,13 @@ export async function streamChat(
   prompt: string,
   sessionId: string,
   model: string,
-  onMessage: (text: string) => void
+  onMessage: (text: string) => void,
+  knowledgeId?: string | null
 ) {
   const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt, sessionId, model }),
+    body: JSON.stringify({ prompt, sessionId, model, knowledgeId: knowledgeId || undefined }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));

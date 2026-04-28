@@ -16,4 +16,5 @@ export interface ChatRequest {
   prompt: string
   sessionId: string
   model: string
+  knowledgeId?: string
 }

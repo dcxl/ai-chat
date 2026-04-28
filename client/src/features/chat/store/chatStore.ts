@@ -5,6 +5,7 @@ interface ChatState {
   sessions: ChatSession[];
   currentSessionId: string | null;
   currentModel: string;
+  currentKnowledgeId: string | null;
   models: ModelOption[];
   isLoading: boolean;
 
@@ -12,6 +13,7 @@ interface ChatState {
   createSession: () => void;
   setCurrentSessionId: (id: string) => void;
   setCurrentModel: (model: string) => void;
+  setCurrentKnowledgeId: (id: string | null) => void;
   fetchModels: () => Promise<void>;
   addMessage: (msg: Message) => void;
   updateMessage: (id: string, content: string) => void;
@@ -23,6 +25,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   sessions: [],
   currentSessionId: null,
   currentModel: "qwen-plus",
+  currentKnowledgeId: null,
   models: [],
   isLoading: false,
 
@@ -43,6 +46,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   setCurrentSessionId: (id) => set({ currentSessionId: id }),
 
   setCurrentModel: (model) => set({ currentModel: model }),
+
+  setCurrentKnowledgeId: (id) => set({ currentKnowledgeId: id }),
 
   fetchModels: async () => {
     const res = await fetch("/api/models");

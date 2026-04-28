@@ -5,9 +5,8 @@ import { streamChat } from "@/api/chat";
 const ChatInput = () => {
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { addMessage, updateMessage, fetchSessions, currentSessionId, currentModel, isLoading, setLoading, createSession } = useChatStore();
+  const { addMessage, updateMessage, fetchSessions, currentSessionId, currentModel, currentKnowledgeId, isLoading, setLoading, createSession } = useChatStore();
 
-  // Auto-resize textarea
   useEffect(() => {
     const el = textareaRef.current;
     if (el) {
@@ -40,7 +39,7 @@ const ChatInput = () => {
       await streamChat(trimmed, sessionId, currentModel, (chunk) => {
         fullContent += chunk;
         updateMessage(aiId, fullContent);
-      });
+      }, currentKnowledgeId);
       await fetchSessions();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "请求失败";
@@ -75,9 +74,7 @@ const ChatInput = () => {
           rows={1}
           disabled={isLoading}
           className="flex-1 resize-none bg-transparent outline-none text-sm py-1.5 max-h-[200px]"
-          style={{
-            color: "var(--text-primary)",
-          }}
+          style={{ color: "var(--text-primary)" }}
         />
         <button
           onClick={send}
